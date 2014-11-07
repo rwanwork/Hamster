@@ -1,0 +1,54 @@
+2011-08-26  Raymond Wan  <r-wan@cb.k.u-tokyo.ac.jp>
+  * All .h files:  Renamed all .h header files to .hpp
+  * All .hpp/.cpp files:  Copyright was not at the top of every file; obvious oversight on my part!
+  * All .hpp/.cpp files:  Added copyright year in the headers to say "2009-2011"
+  * Migrated from Autoconf to CMake; directory structure completely modified.
+  * Software released as v1.3
+
+2010-02-23  Raymond Wan  <r.wan@aist.go.jp>
+  * All .h/.cpp files:  Updated copyright year in the headers to say "2009-2010".
+  * Directory structure:  Created a docs/ subdirectory for the PDF manuals (which were previously
+                          in src/build/doxygen/ and src/layout/doxygen/.
+  * build-mst:  Added a catch for the boost::lexical_cast exception to ensure data set values
+                are doubles
+  * build-mst:  Only tab characters are used to separate fields.
+  * build-mst:  Added a sample name sanitizer that:
+                  - Prepends numeric (integer) IDs with "X_".  This is because the merging process
+                    introduces integers and causes problems.
+                  - Removes quotation marks.
+                  - Replaces each space with a hyphen ("-").
+  * layout-mst:  The output file for graphviz surrounds node names with quotation marks in case the
+                 node names have strange characters (hyphens, etc.).
+  * Software released as v1.2.1
+
+2009-11-12  Raymond Wan  <r.wan@aist.go.jp>
+  * layout-mst:  Fixed bug in parameters.cpp where the "--filetype dot" option was not being recognized.
+
+2009-10-11  Raymond Wan  <r.wan@aist.go.jp>
+  * build-mst:  Renamed graph.cpp to kruskal_graph.cpp to open up the possibility of using
+                other algorithms (such as Prim's).
+  * Software released as v1.2.
+
+2009-06-25  Raymond Wan  <r.wan@aist.go.jp>
+
+  * All files:  Updated e-mail address contact information.
+  * layout-mst:  Generation of each image takes into account of the node coordinates of the previous
+                 image (i.e.,  in sequential order).  Thus, graphviz is now called twice in order to
+                 produce the source DOT file and the image.  This option is on by default and is off
+                 if MPI is enabled with more than one processor since MPI processes the images
+                 independently in rank (and not sequential) order.
+  * layout-mst:  Nodes are larger if they have more components inside them.  How large and how many
+                 components is set in global_defn.h .  This option is off by default.
+  * build-mst:   The node attribute file includes an additional field -- the number of components
+                 inside each node.  This is to accommodate the previous feature of layout-mst.
+  * Software released as v1.1.
+
+2009-01-09  Raymond Wan  <rwan@kuicr.kyoto-u.ac.jp>
+
+  * build-mst, layout-mst:  Complete re-write; separated HAMSTER into
+  two programs (v1.0)
+
+2008-07-17  Raymond Wan  <rwan@kuicr.kyoto-u.ac.jp>
+
+  * hamster:  Release of HAMSTER (v0.9) for distribution.
+

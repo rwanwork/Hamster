@@ -1,0 +1,368 @@
+<html>
+<head>
+  <title>HAMSTER</title>
+</head>
+<body>  
+
+<h1>HAMSTER</h1>
+
+
+<h3>Table of Contents</h3>
+<ol>
+  <li><a href=README.html#introduction>Introduction</a></li>
+  <li><a href=README.html#require>Requirements</a></li>
+  <li><a href=README.html#compiling>Compiling</a></li>
+  <li><a href=README.html#doxygen>Software Documentation</a></li>
+  <li><a href=README.html#structure>Files and Directories</a></li>
+  <li><a href=README.html#running>Running HAMSTER</a></li>
+  <li><a href=README.html#hamsterplus>HAMSTER+</a></li>
+  <li><a href=README.html#future>Future Work</a></li>
+  <li><a href=README.html#about>About HAMSTER</a></li>
+  <li><a href=README.html#copyright>Copyright and License</a></li>
+</ol>
+
+
+<h2 id="introduction">Introduction</h2>
+
+<p>HAMSTER (Helpful Abstraction using Minimum Spanning Trees for Expression Relations) is a system for depicting the relationships between experiments in a microarray data set as a series of minimum spanning trees (MSTs).  The system is available for download at <a href="http://hamster.cbrc.jp/">http://hamster.cbrc.jp/</a>.  This document accompanies the archive, which also includes:</p>
+
+<ul>
+<li>source code in C++,</li>
+<li>other important documentation and license information, and</li>
+<li>a very small data file for testing.</li>
+</ul>
+
+<p>This archive does not include any binaries.  This program is described in the paper:</p>
+
+<blockquote>R. Wan, L. Kiseleva, H. Harada, H. Mamitsuka and P. Horton. HAMSTER: visualizing microarray experiments as a set of minimum spanning trees. Source Code for Biology and Medicine, 4(8), 2009.</blockquote>
+
+<p>which we refer to as "the paper" throughout this document.</p></p>
+
+
+
+<h2 id="require">Requirements</h2>
+
+<table cellpadding="0" cellspacing="3" border="1" align="center">
+<tr>
+  <th>Software</th><th>Version</th><th>Required?</th><th>Web site</th>
+</tr>
+<tr>
+  <td>g++</td><td>4.1.2</td><td>Yes</td><td><a href="http://gcc.gnu.org/">http://gcc.gnu.org/</a></td>
+</tr>
+<tr>
+  <td>CMake</td><td>2.8.2</td><td>Yes</td><td><a href="http://www.cmake.org/">http://www.cmake.org/</a></td>
+</tr>
+<tr>
+  <td>Boost library</td><td>1.39.0</td><td>Yes</td><td><a href="http://www.boost.org/">http://www.boost.org/</a></td>
+</tr>
+<tr>
+  <td>Graphviz</td><td>2.8-2.4</td><td>No</td><td><a href="http://www.graphviz.org">http://www.graphviz.org</a></td>
+</tr>
+<tr>
+  <td>MPI (Open MPI)</td><td>1.1-2.3</td><td>No</td><td><a href="http://www.open-mpi.org/">http://www.open-mpi.org/</a></td>
+</tr>
+<tr>
+  <td>Doxygen</td><td>1.7.1</td><td>No</td><td><a href="http://www.stack.nl/~dimitri/doxygen/">http://www.stack.nl/~dimitri/doxygen/</a></td>
+</tr>
+<caption>Optional and required tools to compile or run HAMSTER</caption>
+</table>
+
+
+<p>The optional and required tools for compiling or using HAMSTER is listed in the table above.  The versions represent the tools used during software development for the paper.  They do not represent the minimum requirements; it is possible that lower versions can be used.</p>
+
+<p>The main tools used by HAMSTER are:</p>
+
+<ul>
+<li>The Boost Library is required for compilation and must be both installed and compiled (usually, installation of the Boost Library does not require compilation).  The compiled components of Boost that are required are:  regex, graph, mpi, program_options, and serialization.</li>
+
+<li>In order to create images, the Graphviz system needs to be available to HAMSTER.  It is assumed that the executable <b>neato</b> is available in the path.  If it is not found, then Graphviz source files are generated, but not their corresponding images.</li>
+
+<li>HAMSTER's workload can be distributed if the Message Passing Interface libraries (MPI) are installed for <b>layout-mst</b>.  While any version of MPI that conforms to the standard should work, HAMSTER has been tested only with Open MPI.</li>
+
+<li>Doxygen is a documentation system to extract comments that have been placed inline in the source code.  See the section below entitled "<a href=README.html#doxygen>Software Documentation</a>" for more information.</li>
+
+</ul>
+
+<p>Under some Linux distributions, the above libraries can be installed using its associated package manager (such as "aptitude" for Debian and Ubuntu).  Consult your Linux distribution's documentation for further information.</p>
+
+<h3 id="installation">Installation Tips</h3>
+
+<p>We refer the user to the web sites of the above programs and libraries for up-to-date instructions on how to install them.  Some brief notes are provided next which are specific to HAMSTER and are meant to supplement their respective documentation.  Generally, we suggest that MPI be installed before Boost.</p>
+
+<ol>
+<li>MPI should be installed according to its documentation.  The Open MPI web site (for example) also includes small examples that should be tested to ensure that the installation was successful.</li>
+
+<li>Boost library - For version 1.39 and later, unarchive Boost and perform the following steps in <tt>/usr/local/boost_1_39_0/</tt>:</li>
+  <ol>
+  <li><tt>./bootstrap.sh --with-libraries=regex,graph,mpi,program_options,serialization --libdir=/usr/local/boost_1_39_0/lib --includedir=/usr/local/boost_1_39_0/include</tt></li>
+  <li>Edit <tt>/usr/local/boost_1_39_0/project-config.jam</tt> and add to the end of the file:
+
+          <blockquote>using mpi ;</blockquote>
+  </li>
+  <li><tt>./bjam --layout=system --libdir=/usr/local/boost_1_39_0/lib --includedir=/usr/local/boost_1_39_0/include install</tt></li>
+  </ol>
+  
+<p>The above instructions assume the installation directory is in <tt>/usr/local/</tt> and, as such, system administration privileges are required.  Also, for Boost versions prior to 1.39, the instructions differ slightly; please consult your Boost documentation.</p>
+
+<li>Graphviz should be installed according to its documentation.  Afterwards, ensure that the program <b>neato</b> can be found in the path.</li>
+
+</ol>
+
+
+<h2 id="compiling">Compiling</h2>
+
+<p>The HAMSTER software is written in C++ and has been compiled using v4.3.2 of g++.  The system has been tested on both 32-bit and 64-bit systems, but it does not make use of any features from 64-bit architectures.</p>
+
+<p>CMake (at least version 2.8) is used to compile the software and it is recommended that an "out-of-source" build is performed so as not to clutter the original source directories.  We give some brief instructions below on how to do this:</p>
+
+<ol>
+<li>After having installed Boost, set the variable BOOST_ROOT to the location of Boost if it has not already been set:
+  <blockquote><tt>export BOOST_ROOT=/usr/local/boost_1_39_0/</tt></blockquote>
+</li>
+
+<li>Expand the HAMSTER archive in a temporary directory  [i.e., <tt>~/tmp/</tt>].  As a result, another directory will be created inside [i.e., <tt>~/tmp/hamster-1.3.0-src/</tt>].</li>
+
+<li>Within <tt>~/tmp/hamster-1.3.0-src/</tt>, create a <tt>build/</tt> subdirectory and then enter it (Actually, <tt>build/</tt> can be anywhere since it will be deleted later; this is just an example.).  Then run
+
+      <blockquote><tt>cmake ..</tt></blockquote>
+
+where ".." represents the location of the top-level <tt>CMakeLists.txt</tt>.  By default, this will set up a Makefile to install the program into <tt>/usr/local/</tt>, which would require system administrator access.  To use another directory, type this:
+
+      <blockquote><tt>cmake .. -DCMAKE_INSTALL_PREFIX=~/tmp</tt></blockquote>
+
+    replacing the installation prefix with whatever you prefer.
+</li>
+
+<li>If your machine has MPI installed but you do <b>not</b> want to have it enabled and running HAMSTER as <tt>mpirun -np 1 ...</tt> is not satisfactory, then you can compile HAMSTER without MPI linked in.  To do this, after the previous step with <tt>cmake</tt>, edit the <tt>LayoutMSTConfig.hpp</tt> in the current directory.  Change the value of <b>HAVE_MPI</b> from <b>1</b> to <b>0</b>.  Then proceed to the next step.
+</li>
+
+<li>Type <tt>make</tt> to compile the C++ source code of HAMSTER.  If this succeeds, then the executables will be in the <tt>build</tt> subdirectory as <tt>build-mst/build-mst</tt> and <tt>layout-mst/layout-mst</tt>.</li>
+
+<li>Finally, type <tt>make install</tt> to install the software.  This copies the important files from the archive to the installation prefix specified in the cmake line above (see "<a href=README.html#structure>Files and Directories</a>" for information about the structure) .  The <tt>~/tmp/hamster-1.3.0-src/</tt> directory, including the <tt>build/</tt> directory, can now be deleted, unless you are interested in viewing the source code.</li>
+</ol>
+
+
+
+<h2 id="doxygen">Software Documentation</h2>
+
+<p>HAMSTER was developed with inline comments that can be extracted using the Doxygen documentation system.  They can be created using <b>make</b> as well.  Here, we show how to generate the documentation for Built-MST.</p>
+
+<ol>
+<li>In the directory where you ran <tt>make</tt> to compile the executable, type <tt>make build-mst-doc</tt>.  If Doxygen can be found, then the documentation will be generated in the <tt>doc/</tt> subdirectory.</li>
+<li>You may choose to do a <tt>make install</tt> which would put this documentation in the <tt>doc/</tt> subdirectory under the installation prefix.  See "<a href=README.html#structure>Files and Directories</a>" for more information.</li>
+</ol>
+
+<p>The following HTML file can be used if the documentation has been <i>installed</i>:  <a href="./documentation.html">documentation.html</a>.  Of course, the documentation has to be created first according to step 1.</p>
+
+
+
+<h2 id="structure">Files and Directories</h2>
+
+<p>After installation, the following directory structure should result:</p>
+
+<ul>
+<li><i>Directory you specified when you ran cmake</i></li>
+  <ul>
+  <li>bin/                   - Binary files
+    <ul>
+    <li>build-mst            - build-mst executable</li>
+    <li>layout-mst           - layout-mst executable</li>
+    </ul>
+  </li>  
+  <li>data/
+    <ul>
+    <li>build-mst.cfg      - Sample configuration file for build-mst</li>
+    <li>layout-mst.cfg     - Sample configuration file for layout-mst</li>
+    <li>sample.attr        - Attributes for sample data</li>
+    <li>sample.data        - Sample data file</li>
+    </ul>
+  </li>
+  <li>doc/
+    <ul>
+    <li>AUTHORS            - Authors of the software</li>
+    <li>ChangeLog          - History of changes</li>
+    <li>COPYING            - Copy of GNU GPL license v3</li>
+    <li>COPYING.DOC        - Copy of GNU FDL license v1.3</li>
+    <li>documentation.html - Top-level HTML file for viewing Doxygen-generated documents
+    <li>README.html        - This file in HTML</li>
+    <li>README             - This file as plain text</li>
+    <li>VERSION            - How to determine the software version</li>
+    </ul>
+  </li>
+  </ul>
+</ul>
+
+<p>The HAMSTER system is comprised of two executables:  <b>build-mst</b> and <b>layout-mst</b>.</p>
+
+
+
+<h2 id="running">Running HAMSTER</h2>
+
+<h3 id="configuration">Configuration</h3>
+
+<p>Running either executable (build-mst or layout-mst) without any arguments displays a list of available options.  Options can also be placed in configuration files called <tt>build-mst.cfg</tt> and <tt>layout-mst.cfg</tt>, respectively.  In the configuration file, the options take the form of:</p>
+
+<blockquote>&lt;key&gt; = value</blockquote>
+
+<p>where &lt;key&gt; is the name of the command-line option.  Options on the command-line take priority over those in the configuration files.</p>
+
+<p>To see a list of available options, use the "--help" option flag.  Verbose and debugging outputs are available using "--verbose" and "--debug", respectively for both programs.</p>
+
+<h3 id="attributes">Experiment Attributes</h3>
+
+
+<p>Every experiment is assigned default attributes which include a color and a shape.  Since Graphviz is used to layout the MSTs, the names of both are based on the terms used by Graphviz.  Colors are given in hexadecimal format (#C0C0C0 represents gray).  Consult the <a href="http://www.graphviz.org/Documentation.php">documentation</a> for Graphviz for more information.  In particular, take a look at the documents that talk about "Colors" and "Node Shapes".  Some example colors and shapes are as follows:</p>
+
+<table cellpadding="0" cellspacing="3" border="1" align="center">
+<tr>
+  <td style="background-color:#FFFFD5;">#FFFFD5</td>
+  <td style="background-color:#FFFF80;">#FFFF80</td>
+  <td style="background-color:#FFFF2A;">#FFFF2A</td>
+  <td style="background-color:#FFFF00;">#FFFF00</td>
+  <td style="background-color:#FFE300;">#FFE300</td>
+</tr>
+<tr>
+  <td style="background-color:#FFC600;">#FFC600</td>
+  <td style="background-color:#FFAA00;">#FFAA00</td>
+  <td style="background-color:#FF8E00;">#FF8E00</td>
+  <td style="background-color:#FF7100;">#FF7100</td>
+  <td style="background-color:#FF5500;">#FF5500</td>
+</tr>
+<tr>
+  <td style="background-color:#FF3900;">#FF3900</td>
+  <td style="background-color:#FF1C00;">#FF1C00</td>
+  <td style="background-color:#FF0000;">#FF0000</td>
+  <td style="background-color:#B6FF00;">#B6FF00</td>
+  <td style="background-color:#49FF00;">#49FF00</td>
+</tr>
+<tr>
+  <td style="background-color:#00FF24;">#00FF24</td>
+  <td style="background-color:#00FF92;">#00FF92</td>
+  <td style="background-color:#00FFFF;">#00FFFF</td>
+  <td style="background-color:#0092FF;">#0092FF</td>
+  <td style="background-color:#0024FF;">#0024FF</td>
+</tr>
+<tr>
+  <td style="background-color:#4900FF;">#4900FF</td>
+  <td style="background-color:#B600FF;">#B600FF</td>
+  <td style="background-color:#FF00DB;">#FF00DB</td>
+  <td style="background-color:#FF006D;">#FF006D</td>
+</tr>
+<caption>Colors</caption>
+</table>
+
+<br>
+
+<table cellpadding="0" cellspacing="3" border="1" align="center">
+<tr><td>ellipse</td><td>house</td><td>box</td><td>diamond</td><td>hexagon</td></tr>
+<caption>Shapes</caption>
+</table>
+
+
+<h3 id="sample">Sample Run</h3>
+
+<p>A sample data file of four experiments and two probes is provided in the data/ directory to check if the system is working correctly.  There are two files in total for this sample:</p>
+
+<ol>
+<li><tt>sample.data</tt></li>
+<li><tt>sample.attr</tt></li>
+</ol>
+
+<p>The file <tt>sample.data</tt> is the main gene expression data file and is required.  It is tab-separated with an experiment on each line.  The first row and first column are used as headers and may contain any text.  Expression levels are floating point values OR the string NULL to indicate a missing value.</p>
+
+<p>The optional file <tt>sample.attr</tt> lists the attributes of each experiment.  The file is a tab-separated file with an experiment on each line and three fields per line.  The three fields are:  experiment name, color, and shape.  Colors and shapes are specified as given in the previous section.</p>
+
+<p>Running HAMSTER effectively means running first <b>build-mst</b> to construct the MSTs and then <b>layout-mst</b> to generate the images.  So, with the sample data in the current directory, the following command would apply Euclidean distance and single linkage to our sample data set with verbose output:</p>
+
+<tt>build-mst sample-data --attrs sample.attr --distance euclidean --linkage single --verbose</tt>
+
+<p>The output should look like the following:</p>
+
+<pre>
+==  Distance method:                Euclidean distance
+==  Linkage method:                 Single linkage
+==  Scoring method:                 Gap-based
+==  Microarray filename:            sample.data
+==  Attribute filename:             sample.attr
+==  Output path:                    ./
+==  Microarray dimensions:          4 by 2
+==  Experiment attributes read in:  4
+==  Number of pairs calculated:     6
+</pre>
+
+<p>A summary of the merging process is provided in the file <tt>summary.txt</tt>:</p>
+
+<pre>
+4
+0 4294967295  4294967295  0 0 0
+1 0 1 1 1.41421 69.9261
+2 4 2 2.23607 2.82843 100
+3 5 3 0 0 0
+</pre>
+
+<p>Except for the first line which gives the number of experiments, the remaining lines indicate the merging process and the score assigned.  This file is used by the next program to generate the images:</p>
+
+<tt>layout-mst summary.txt</tt>
+
+<p>If Open MPI has been installed, then layout-mst has to be run as follows:</p>
+
+<tt>mpirun -np &lt;proc&gt; layout-mst</tt>
+
+<p>where &lt;proc&gt; is the number of processors to use.</p>
+
+<p>Each MST corresponds to a Graphviz file in the format &lt;number&gt;.graphviz.  If Graphviz was found, then a set of PNG images would also have been created.  The Graphviz source files can be edited by hand and re-processed manually using neato:</p>
+
+<tt>neato -Tpng &lt;0.graphviz &gt;0.png</tt>
+
+
+
+<h2 id="hamsterplus">HAMSTER+</h2>
+
+<p>HAMSTER+ is a web server based on HAMSTER which adds a wrapper specific to NCBI Gene Expression Omnibus (GEO) data.  Some support for tab-separated data is also available with one significant difference -- a data file in the format of <tt>sample.data</tt> is accepted by <b>transposed</b> so that each row is a probe and each column is an experiment.  This coincides with the format used by the Simple Omnibus Format in Text (SOFT) used by GEO.</p>
+
+<p>Access to HAMSTER+ can be found at <a href="http://hamster.cbrc.jp/">http://hamster.cbrc.jp/</a>.</p>
+
+
+
+<h2 id="future">Future Work</h2>
+
+<p>If the output file format is GIF, then the set of GIFs can be combined into one animated GIF.  This may be implemented in the future.</p>
+
+
+
+<h2 id="about">About HAMSTER</h2>
+
+
+<p>This software was implemented by Raymond Wan:
+  <blockquote>
+  E-mail:  <a href="r-wan@cb.k.u-tokyo.ac.jp">r-wan@cb.k.u-tokyo.ac.jp</a><br>
+  Homepage:  <a href="http://www.cbrc.jp/~rwan/">http://www.cbrc.jp/~rwan/</a>
+  </blockquote>
+</p>
+
+<p>The latest version of HAMSTER can be downloaded from the above web page.  Click on "Software" in the menu on the main page.  HAMSTER+ as well as the version used for the paper is available here:
+  <blockquote>
+  <a href="http://hamster.cbrc.jp/">http://hamster.cbrc.jp/</a>
+  </blockquote>
+</p>
+
+<p>This software is actively maintained.  If you have any information about bugs, suggestions for the documentation or just have some general comments, feel free to write to the above address.</p>
+
+<p>As noted <a href=README.html#require>above</a>, many tools were used used for the development of HAMSTER.  In addition, the text version of this document was generated using <a href="http://www.mbayer.de/html2text/">html2text</a>.</p>
+
+
+
+<h2 id="copyright">Copyright and License</h2>
+
+<address>HAMSTER (Helpful Abstraction using Minimum Spanning Trees for Expression Relations)<br>
+Copyright (C) 2009-2011  by Raymond Wan</address>
+
+<p>HAMSTER is distributed under the terms of the GNU General Public License (GPL, version 3 or later) -- see the file COPYING for details.</p>
+
+<p>Permission is granted to copy, distribute and/or modify this document under the terms of the GNU Free Documentation License, Version 1.3 or any later version published by the Free Software Foundation; with no Invariant Sections, no Front-Cover Texts and no Back-Cover Texts.  A copy of the license is included with the archive as <tt>COPYING.DOC</tt>.</p>
+
+<p>Subversion version:  $Id: README.html 3 2011-08-25 10:19:50Z rwan $</p>
+
+</body>
+</html>
+

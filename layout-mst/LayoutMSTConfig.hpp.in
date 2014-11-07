@@ -1,0 +1,64 @@
+///////////////////////////////////////////////////////////////////////////
+//  HAMSTER
+//  Software for depicting microarray data sets as a set of minimum spanning
+//    trees.
+//  
+//  Version 1.3 -- August 26, 2011
+//  
+//  Copyright (C) 2009-2011 by Raymond Wan, All rights reserved.
+//  Contact:  r-wan@cb.k.u-tokyo.ac.jp
+//  Organization:  Department of Computational Biology, Graduate School of
+//                 Frontier Science, University of Tokyo and
+//                 Computational Biology Research Center, AIST,
+//                 Japan
+//  
+//  This file is part of HAMSTER.
+//  
+//  HAMSTER is free software; you can redistribute it and/or 
+//  modify it under the terms of the GNU Lesser General Public License 
+//  as published by the Free Software Foundation; either version 
+//  3 of the License, or (at your option) any later version.
+//  
+//  HAMSTER is distributed in the hope that it will be useful,
+//  but WITHOUT ANY WARRANTY; without even the implied warranty of
+//  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+//  GNU Lesser General Public License for more details.
+//  
+//  You should have received a copy of the GNU Lesser General Public 
+//  License along with HAMSTER; if not, see 
+//  <http://www.gnu.org/licenses/>.
+///////////////////////////////////////////////////////////////////////////
+
+
+/*******************************************************************/
+/*!
+    \file LayoutMSTConfig.hpp[.in]
+    LayoutMST configuration file.
+    
+    \author Raymond Wan (r-wan@cb.k.u-tokyo.ac.jp)
+    \par Organizations
+          - Department of Computational Biology, Graduate School of
+            Frontier Science, University of Tokyo
+          - Computational Biology Research Center, AIST, Japan
+          
+    $Id: LayoutMSTConfig.hpp.in 3 2011-08-25 10:19:50Z rwan $
+
+*/
+/*******************************************************************/
+
+//  Version information for Layout-MST
+#define LayoutMST_VERSION_MAJOR @LayoutMST_VERSION_MAJOR@
+#define LayoutMST_VERSION_MINOR @LayoutMST_VERSION_MINOR@
+
+//  Set if OpenMP exists
+#cmakedefine01 HAVE_OPENMP
+
+//  Set if MPI exists
+#cmakedefine01 HAVE_MPI
+
+//  Set if Graphviz exists
+#cmakedefine01 HAVE_GRAPHVIZ
+
+//  Set to the path where neato is available
+#cmakedefine GRAPHVIZ_NEATO_PATH @GRAPHVIZ_NEATO_EXECUTABLE@
+

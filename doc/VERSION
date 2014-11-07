@@ -1,0 +1,4 @@
+The version of HAMSTER that you are using can be found in the 
+../cmake/global.cmake file as:
+
+(HAMSTER_VERSION_MAJOR).(HAMSTER_VERSION_MINOR)
