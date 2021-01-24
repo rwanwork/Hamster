@@ -63,6 +63,8 @@ class BUILDMST {
     bool processOptions (int argc, char *argv[]);
     void initSettings ();
     bool checkSettings ();
+    
+    //  Main part of the class  [run.cpp]
     void run ();
 
     //  Data file I/O  [io.cpp]
