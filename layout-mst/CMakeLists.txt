@@ -148,10 +148,15 @@ SET (CMAKE_MODULE_PATH ${CMAKE_CURRENT_SOURCE_DIR}/../../cmake)
 ##  Set the root path for Boost from the environment variable
 # SET (Boost_DEBUG OFF)
 SET (BOOST_ROOT $ENV{BOOST_ROOT})
-SET (Boost_NO_SYSTEM_PATHS true)
+SET (Boost_NO_SYSTEM_PATHS ON)
 SET (Boost_USE_STATIC_LIBS   ON)
 SET (Boost_USE_MULTITHREADED ON)
 SET (Boost_USE_STATIC_RUNTIME OFF)
+
+##  Disable search for boost-cmake, from Boost 1.70.0
+##    Helpful if there are conflicts between locally and system-installed versions
+SET (Boost_NO_BOOST_CMAKE ON)
+
 FIND_PACKAGE (Boost 1.42.0 REQUIRED COMPONENTS regex graph mpi program_options serialization)
 
 IF (Boost_FOUND)
