@@ -71,7 +71,7 @@ Compiling
 
 The HAMSTER software is written in C++ and has been compiled using v4.3.2 of g++. The system has been tested on both 32-bit and 64-bit systems, but it does not make use of any features from 64-bit architectures.
 
-CMake (at least version 2.8) is used to compile the software and it is recommended that an "out-of-source" build is performed so as not to clutter the original source directories. We give some brief instructions below on how to do this:
+CMake is used to compile the software and it is recommended that an "out-of-source" build is performed so as not to clutter the original source directories. We give some brief instructions below on how to do this:
   1. After having installed Boost, set the variable BOOST_ROOT to the location of Boost if it has not already been set:
 
            export BOOST_ROOT=/usr/local/boost_1_39_0/
